@@ -25,12 +25,11 @@ struct ContentView: View {
                 ZStack(alignment: .bottom) {
                     MapView()
                         .edgesIgnoringSafeArea(.all)
-                    
                     if isDetailViewPresented {
                         DetailView(geometry: geometry)
-                            .transition(.move(edge: .bottom))
                     }
                 }
+                .ignoresSafeArea(edges: .bottom)
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationBarItems(
                     leading: Button(action: {}) {

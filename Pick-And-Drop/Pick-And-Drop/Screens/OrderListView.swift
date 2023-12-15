@@ -9,12 +9,14 @@ import SwiftUI
 
 struct OrderListView: View {
     var body: some View {
-        List(0..<10) { index in
-            Section(header: Text("").padding(.vertical, 2).background(Color.black)) {
-                VStack(alignment: .leading, spacing: 5) {
-                    OrderItemView(index: index)
+        Form {
+            ForEach(1..<11, id: \.self) { index in
+                Section {
+                    VStack(alignment: .leading, spacing: 5) {
+                        OrderItemView(index: index)
+                    }
+                    .listRowBackground(Color("SectionBgColor"))
                 }
-                .listRowBackground(Color("SectionBgColor"))
             }
         }
     }

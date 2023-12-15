@@ -11,21 +11,35 @@ struct DetailView: View {
     @State private var isSheetExpanded = false
     @State private var viewHeight: CGFloat = 300.0
     let geometry: GeometryProxy
-    
+
     var body: some View {
         VStack {
             Spacer(minLength: 0)
             HStack {
                 Spacer()
-                if !isSheetExpanded {
-                    Capsule()
-                        .fill(Color.secondary)
-                        .frame(width: 35, height: 5)
-                        .padding(.top, 5)
-                        .frame(maxWidth: .infinity, alignment: .center)
+                Button(action: {
+                }) {
+                    HStack {
+                        Image(uiImage: UIImage(named: "horizontalline") ?? UIImage())
+                            .resizable()
+                            .frame(width: 50, height: 50)
+                            .cornerRadius(10)
+                            .foregroundColor(.white)
+                    }
                 }
+                .onLongPressGesture(minimumDuration: 0.0) {
+                                   withAnimation {
+                                       isSheetExpanded.toggle()
+                                   }
+                               }
+                               .gesture(
+                                   DragGesture()
+                                       .onChanged { value in
+                                           handleDragGesture(value)
+                                       }
+                               )
                 Spacer()
-                
+
                 if isSheetExpanded {
                     Button(action: {
                         withAnimation {
@@ -35,25 +49,25 @@ struct DetailView: View {
                         Image(systemName: "multiply.circle")
                             .font(.title)
                             .foregroundColor(.gray)
-                            .padding()
                     }
                 }
             }
+
             OrderSummaryView()
         }
         .frame(height: isSheetExpanded ? nil : viewHeight)
         .background(Color.black)
         .cornerRadius(5)
         .edgesIgnoringSafeArea(.bottom)
-        .gesture(
-            DragGesture()
-                .onChanged { value in
-                    if !isSheetExpanded {
-                        let newHeight = max(viewHeight, value.translation.height)
-                        viewHeight = min(max(newHeight, viewHeight), geometry.size.height * 0.5)
-                        isSheetExpanded = viewHeight > geometry.size.height * 0.2 + 6
-                    }
-                }
-        )
     }
+    
+    private func handleDragGesture(_ value: DragGesture.Value) {
+            let translation = value.translation.height
+            if !isSheetExpanded {
+                let newHeight = max(viewHeight, translation)
+                viewHeight = min(max(newHeight, viewHeight), geometry.size.height * 0.5)
+                isSheetExpanded = viewHeight > geometry.size.height * 0.2 + 6
+            }
+        }
+    
 }
